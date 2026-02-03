@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kruthika Vasisht | Data Visualization Portfolio</title>
+    <title>Kruthika Vasisht | Data Science & Engineering Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,15 +15,107 @@
             line-height: 1.6;
         }
         
-        .header {
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222;
+            padding: 16px 24px;
+            z-index: 1000;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: #fff; }
+        
+        /* Mobile Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: #fff;
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            border-bottom: 1px solid #222;
+            padding: 24px;
+            z-index: 999;
+        }
+        
+        .mobile-menu.active { display: block; }
+        
+        .mobile-menu a {
+            display: block;
+            color: #888;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+        }
+        
+        .mobile-menu a:hover { color: #fff; }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
             background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
-            padding: 80px 24px;
-            text-align: center;
             position: relative;
             overflow: hidden;
         }
         
-        .header::before {
+        .hero::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -32,80 +124,312 @@
             pointer-events: none;
         }
         
-        .header-content {
+        .hero-content {
             position: relative;
             z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 900px;
+            text-align: center;
         }
         
-        .header h1 {
-            font-size: 52px;
+        .hero h1 {
+            font-size: 56px;
             font-weight: 800;
             background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .hero .tagline {
+            font-size: 24px;
+            color: #94a3b8;
             margin-bottom: 16px;
         }
         
-        .header .role {
-            font-size: 22px;
-            color: #94a3b8;
-            margin-bottom: 24px;
-        }
-        
-        .header .bio {
-            font-size: 16px;
+        .hero .bio {
+            font-size: 18px;
             color: #64748b;
-            max-width: 600px;
-            margin: 0 auto 32px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
         }
         
-        .header-links {
+        .hero-links {
             display: flex;
             gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 48px;
         }
         
-        .header-links a {
+        .hero-links a {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 24px;
+            padding: 14px 28px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
             color: #e5e5e5;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             transition: all 0.3s ease;
         }
         
-        .header-links a:hover {
+        .hero-links a:hover {
             background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.2);
             transform: translateY(-2px);
         }
         
-        .filter-bar {
-            background: #111;
-            border-bottom: 1px solid #222;
-            padding: 20px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        .hero-links a.primary {
+            background: #3b82f6;
+            border-color: #3b82f6;
         }
         
-        .filter-container {
+        .hero-links a.primary:hover { background: #2563eb; }
+        
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 48px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .stat { text-align: center; }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        /* Sections */
+        section {
+            padding: 100px 24px;
             max-width: 1200px;
             margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #3b82f6;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        
+        .section-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Education & Awards */
+        .edu-awards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        @media (max-width: 768px) {
+            .edu-awards-grid { grid-template-columns: 1fr; }
+        }
+        
+        .edu-card, .awards-card {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .edu-card h3, .awards-card h3 {
+            font-size: 18px;
+            color: #3b82f6;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .edu-item {
+            margin-bottom: 20px;
+        }
+        
+        .edu-item:last-child { margin-bottom: 0; }
+        
+        .edu-school {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .edu-degree {
+            font-size: 14px;
+            color: #94a3b8;
+            margin: 4px 0;
+        }
+        
+        .edu-date {
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .award-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .award-item:last-child { margin-bottom: 0; }
+        
+        .award-icon {
+            color: #fbbf24;
+            font-size: 18px;
+            line-height: 1;
+        }
+        
+        .award-text {
+            font-size: 14px;
+            color: #a1a1aa;
+            line-height: 1.5;
+        }
+        
+        .award-text strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        /* Experience */
+        .experience-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        
+        .exp-card {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            transition: border-color 0.3s;
+        }
+        
+        .exp-card:hover { border-color: #3b82f6; }
+        
+        .exp-meta {
+            border-right: 1px solid #222;
+            padding-right: 40px;
+        }
+        
+        .exp-company {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .exp-acquired {
+            font-size: 13px;
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+        
+        .exp-role {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        
+        .exp-date {
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .exp-location {
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .exp-content h4 {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+        
+        .exp-content ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .exp-content li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #a1a1aa;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .exp-content li::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+        }
+        
+        .exp-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        .exp-tag {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        @media (max-width: 900px) {
+            .exp-card { grid-template-columns: 1fr; }
+            .exp-meta { border-right: none; border-bottom: 1px solid #222; padding-right: 0; padding-bottom: 24px; }
+        }
+        
+        /* Projects Filter */
+        .filter-bar {
             display: flex;
             gap: 12px;
-            flex-wrap: wrap;
             justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
         }
         
         .filter-btn {
@@ -124,20 +448,7 @@
         .filter-btn:hover { border-color: #555; color: #ccc; }
         .filter-btn.active { background: #3b82f6; border-color: #3b82f6; color: white; }
         
-        .projects-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 24px;
-        }
-        
-        .section-title {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #64748b;
-            margin-bottom: 32px;
-        }
-        
+        /* Projects Grid */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -150,7 +461,6 @@
             overflow: hidden;
             border: 1px solid #222;
             transition: all 0.3s ease;
-            cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
@@ -164,9 +474,10 @@
         
         .project-image {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
             border-bottom: 1px solid #222;
+            background: #1a1a1a;
         }
         
         .project-content { padding: 24px; }
@@ -175,7 +486,7 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         
         .project-tag {
@@ -187,15 +498,15 @@
             border-radius: 4px;
         }
         
-        .tag-powerbi { background: #fbbf24; color: #1a1a1a; }
-        .tag-tableau { background: #e97627; color: white; }
-        .tag-javascript { background: #f7df1e; color: #1a1a1a; }
-        .tag-excel { background: #217346; color: white; }
-        .tag-flourish { background: #ff6b6b; color: white; }
-        .tag-datawrapper { background: #1d81a2; color: white; }
+        .tag-ml { background: #8b5cf6; color: white; }
+        .tag-dataviz { background: #3b82f6; color: white; }
+        .tag-dataeng { background: #10b981; color: white; }
+        .tag-nlp { background: #f59e0b; color: #1a1a1a; }
+        .tag-cv { background: #ec4899; color: white; }
+        .tag-web { background: #6366f1; color: white; }
         
         .project-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #f5f5f5;
             margin-bottom: 8px;
@@ -215,6 +526,57 @@
             color: #555;
         }
         
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .skill-card {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 32px;
+        }
+        
+        .skill-card h3 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .skill-icon {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .skill-item {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        /* Footer */
         .footer {
             background: #0a0a0a;
             border-top: 1px solid #222;
@@ -226,192 +588,448 @@
         .footer a { color: #3b82f6; text-decoration: none; }
         
         @media (max-width: 768px) {
-            .header h1 { font-size: 36px; }
+            .hero h1 { font-size: 36px; }
             .projects-grid { grid-template-columns: 1fr; }
+            .stats { gap: 24px; }
+            .section-title { font-size: 28px; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <h1>Kruthika Vasisht</h1>
-            <p class="role">Data Science Engineer | MS Data Analytics, Northeastern</p>
-            <p class="bio">Building data visualization and analytics solutions. Previously at SpectraWAVE (Philips) developing FDA-compliant medical device analytics platforms.</p>
-            <div class="header-links">
-                <a href="www.linkedin.com/in/kruthikavasisht" target="_blank">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                    LinkedIn
-                </a>
-                <a href="https://github.com/Kruthikasv" target="_blank">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    GitHub
-                </a>
-                <a href="mailto:vasishtkruthika@gmail.com">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    Email
-                </a>
-                <a href="resume.pdf" target="_blank">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    Resume
-                </a>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-logo">KV</div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#education">Education</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#skills">Skills</a>
+                <a href="mailto:vasishtkruthika@gmail.com">Contact</a>
+            </div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
-    </header>
+    </nav>
     
-    <div class="filter-bar">
-        <div class="filter-container">
-            <button class="filter-btn active" data-filter="all">All Projects</button>
-            <button class="filter-btn" data-filter="interactive">Interactive</button>
-            <button class="filter-btn" data-filter="powerbi">Power BI</button>
-            <button class="filter-btn" data-filter="tableau">Tableau</button>
-            <button class="filter-btn" data-filter="flourish">Flourish</button>
-            <button class="filter-btn" data-filter="excel">Excel</button>
-        </div>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#education" onclick="toggleMenu()">Education</a>
+        <a href="#experience" onclick="toggleMenu()">Experience</a>
+        <a href="#projects" onclick="toggleMenu()">Projects</a>
+        <a href="#skills" onclick="toggleMenu()">Skills</a>
+        <a href="mailto:vasishtkruthika@gmail.com">Contact</a>
     </div>
     
-    <section class="projects-section">
-        <h2 class="section-title">Featured Work</h2>
+    <!-- Hero -->
+    <section class="hero" id="about">
+        <div class="hero-content">
+            <h1>Kruthika Vasisht</h1>
+            <p class="tagline">Data Science Engineer | ML, Analytics & Data Engineering</p>
+            <p class="bio">Building production data pipelines, ML systems, and analytics platforms that drive business decisions. MS Data Analytics from Northeastern, with hands-on experience shipping end-to-end solutions at SpectraWAVE.</p>
+            
+            <div class="hero-links">
+                <a href="resume.pdf" class="primary" target="_blank">Download Resume</a>
+                <a href="https://linkedin.com/in/kruthikavasisht" target="_blank">LinkedIn</a>
+                <a href="https://github.com/Kruthikasv" target="_blank">GitHub</a>
+                <a href="mailto:vasishtkruthika@gmail.com">Email</a>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">1M+</div>
+                    <div class="stat-label">Records Processed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">15+</div>
+                    <div class="stat-label">Projects</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Industries</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Education & Awards -->
+    <section id="education">
+        <div class="section-header">
+            <div class="section-label">Background</div>
+            <h2 class="section-title">Education & Achievements</h2>
+        </div>
+        
+        <div class="edu-awards-grid">
+            <div class="edu-card">
+                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg> Education</h3>
+                
+                <div class="edu-item">
+                    <div class="edu-school">Northeastern University</div>
+                    <div class="edu-degree">MS in Data Analytics Engineering</div>
+                    <div class="edu-date">Boston, MA | 2023 - 2025</div>
+                </div>
+                
+                <div class="edu-item">
+                    <div class="edu-school">Visvesvaraya Technological University</div>
+                    <div class="edu-degree">BE in Computer Science Engineering</div>
+                    <div class="edu-date">Bangalore, India | 2018 - 2022</div>
+                </div>
+            </div>
+            
+            <div class="awards-card">
+                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Achievements</h3>
+                
+                <div class="award-item">
+                    <span class="award-icon">★</span>
+                    <div class="award-text"><strong>Smart India Hackathon 2022 Winner</strong> - National-level competition among 5000+ teams</div>
+                </div>
+                
+                <div class="award-item">
+                    <span class="award-icon">★</span>
+                    <div class="award-text"><strong>Published Research</strong> - Blockchain-based Tamper-Proof Air Quality Management System</div>
+                </div>
+                
+                <div class="award-item">
+                    <span class="award-icon">★</span>
+                    <div class="award-text"><strong>IncubateIND Hackathon Winner</strong> - Won among 200+ participating teams</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Experience -->
+    <section id="experience">
+        <div class="section-header">
+            <div class="section-label">Experience</div>
+            <h2 class="section-title">Where I've Worked</h2>
+        </div>
+        
+        <div class="experience-grid">
+            <div class="exp-card">
+                <div class="exp-meta">
+                    <div class="exp-company">SpectraWAVE</div>
+                    <div class="exp-acquired">Acquired by Philips</div>
+                    <div class="exp-role">Data Science Engineer</div>
+                    <div class="exp-date">Jan 2025 - Dec 2025</div>
+                    <div class="exp-location">Bedford, MA</div>
+                </div>
+                <div class="exp-content">
+                    <h4>Medical Device Systems Engineering</h4>
+                    <ul>
+                        <li>Owned end-to-end data platform for medical device logs, engineering ETL pipelines scaling to 1,000+ logs/month across Dropbox, SharePoint, Azure DevOps</li>
+                        <li>Designed FDA-regulated complaint automation pipeline, generating structured PDFs with 15+ complaint fields for regulatory compliance</li>
+                        <li>Built multi-dashboard analytics platform covering OCT image quality, field service, and manufacturing performance for 5 cross-functional teams</li>
+                        <li>Automated Angio-OCT calibration using YOLO object detection, achieving 0.81+ confidence scores and reducing manual effort by 80%</li>
+                    </ul>
+                    <div class="exp-tags">
+                        <span class="exp-tag">Python</span>
+                        <span class="exp-tag">YOLO</span>
+                        <span class="exp-tag">Flask/Plotly</span>
+                        <span class="exp-tag">Azure DevOps</span>
+                        <span class="exp-tag">FDA Compliance</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exp-card">
+                <div class="exp-meta">
+                    <div class="exp-company">NTT Data</div>
+                    <div class="exp-role">IT Trainee</div>
+                    <div class="exp-date">Apr 2022 - Jan 2023</div>
+                    <div class="exp-location">Bangalore, India</div>
+                </div>
+                <div class="exp-content">
+                    <h4>Data Engineering & Analytics</h4>
+                    <ul>
+                        <li>Architected Python/SQL ETL pipeline with scheduling and query optimization, reducing dashboard load times by 40%</li>
+                        <li>Designed responsive UI with Bootstrap and usage telemetry tracking, increasing user engagement by 25%</li>
+                        <li>Refactored data models and built API-driven extracts, improving dashboard reliability for 5+ departments</li>
+                    </ul>
+                    <div class="exp-tags">
+                        <span class="exp-tag">Python</span>
+                        <span class="exp-tag">SQL</span>
+                        <span class="exp-tag">ETL</span>
+                        <span class="exp-tag">Bootstrap</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exp-card">
+                <div class="exp-meta">
+                    <div class="exp-company">IISc Bangalore</div>
+                    <div class="exp-role">ML Research Intern</div>
+                    <div class="exp-date">Dec 2020 - Jun 2021</div>
+                    <div class="exp-location">Bangalore, India</div>
+                </div>
+                <div class="exp-content">
+                    <h4>Signal Processing & Machine Learning</h4>
+                    <ul>
+                        <li>Built voice pathology detection pipeline analyzing jitter and shimmer irregularities using PRAAT signal processing</li>
+                        <li>Engineered data workflows for 10,000+ children's speech samples, standardizing metadata schemas</li>
+                    </ul>
+                    <div class="exp-tags">
+                        <span class="exp-tag">Signal Processing</span>
+                        <span class="exp-tag">PRAAT</span>
+                        <span class="exp-tag">Python</span>
+                        <span class="exp-tag">Research</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects -->
+    <section id="projects">
+        <div class="section-header">
+            <div class="section-label">Projects</div>
+            <h2 class="section-title">Featured Work</h2>
+            <p class="section-subtitle">A selection of projects spanning ML, data visualization, NLP, and data engineering</p>
+        </div>
+        
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="ml">Machine Learning</button>
+            <button class="filter-btn" data-filter="dataviz">Data Visualization</button>
+            <button class="filter-btn" data-filter="nlp">NLP</button>
+            <button class="filter-btn" data-filter="dataeng">Data Engineering</button>
+        </div>
         
         <div class="projects-grid">
             
-            <!-- Amazon Analytics -->
-            <a href="Group 8-Project 1.html" class="project-card" data-tools="javascript flourish interactive">
-                <img src="assets/thumbnails/amazon-analytics.png" alt="Amazon Consumer Analytics" class="project-image">
+            <!-- Data Viz Projects -->
+            <a href="hdma-lending.html" class="project-card" data-category="dataviz">
+                <img src="assets/thumbnails/hmda-lending.png" alt="HMDA Lending" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-javascript">JavaScript</span>
-                        <span class="project-tag tag-flourish">Flourish</span>
-                    </div>
-                    <h3 class="project-title">Amazon Consumer Analytics</h3>
-                    <p class="project-description">Multi-page narrative dashboard analyzing 272K products and 25.5M purchases. Explores product performance, customer engagement patterns, and sentiment analysis.</p>
-                    <div class="project-meta">
-                        <span>Interactive</span>
-                        <span>React + Flourish</span>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Power BI: HMDA -->
-            <a href="hdma-lending.html" class="project-card" data-tools="powerbi">
-                <img src="assets/thumbnails/hmda-lending.png" alt="HMDA Lending Analysis" class="project-image">
-                <div class="project-content">
-                    <div class="project-tags">
-                        <span class="project-tag tag-powerbi">Power BI</span>
+                        <span class="project-tag tag-dataviz">Power BI</span>
                     </div>
                     <h3 class="project-title">Massachusetts HMDA Lending Analysis</h3>
-                    <p class="project-description">3-page dashboard analyzing 1M+ mortgage applications. Uses Key Influencers AI and decomposition trees to identify approval drivers and denial patterns.</p>
-                    <div class="project-meta">
-                        <span>Regulatory Data</span>
-                        <span>AI Visuals</span>
-                    </div>
+                    <p class="project-description">3-page dashboard analyzing 825K+ mortgage applications with AI-driven Key Influencers and decomposition trees</p>
+                    <div class="project-meta"><span>Power BI</span><span>DAX</span></div>
                 </div>
             </a>
             
-            <!-- AI Adoption Dashboard -->
-            <a href="ai-dashboard.html" class="project-card" data-tools="javascript interactive">
-                <img src="assets/thumbnails/ai-adoption.png" alt="AI Adoption Dashboard" class="project-image">
+            <a href="Group 8-Project 1.html" class="project-card" data-category="dataviz">
+                <img src="assets/thumbnails/amazon-analytics.png" alt="Amazon Analytics" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-javascript">JavaScript</span>
+                        <span class="project-tag tag-dataviz">Flourish</span>
                     </div>
-                    <h3 class="project-title">AI Adoption Analytics Dashboard</h3>
-                    <p class="project-description">Custom Canvas-based dashboard tracking AI and GenAI adoption trends (2019-2024). Features animated playback, year comparison tool, and interactive sparklines.</p>
-                    <div class="project-meta">
-                        <span>Interactive</span>
-                        <span>Canvas API</span>
-                    </div>
+                    <h3 class="project-title">Amazon Consumer Analytics</h3>
+                    <p class="project-description">Multi-page narrative dashboard analyzing 272K products and 25.5M purchases with sentiment analysis</p>
+                    <div class="project-meta"><span>JavaScript</span><span>Flourish</span></div>
                 </div>
             </a>
             
-            <!-- Tableau: Carbon Emissions -->
-            <a href="tableau-carbon-page.html" class="project-card" data-tools="tableau">
-                <img src="assets/thumbnails/tableau-carbon.png" alt="Carbon Emissions Dashboard" class="project-image">
+            <a href="tableau-carbon-page.html" class="project-card" data-category="dataviz">
+                <img src="assets/thumbnails/tableau-carbon.png" alt="Carbon Emissions" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-tableau">Tableau</span>
+                        <span class="project-tag tag-dataviz">Tableau</span>
                     </div>
                     <h3 class="project-title">Renewable Energy & Carbon Emissions</h3>
-                    <p class="project-description">Tableau Story analyzing global CO2 emissions, carbon footprint patterns, and the impact of renewable energy adoption on emission reduction.</p>
-                    <div class="project-meta">
-                        <span>Video Walkthrough</span>
-                        <span>Tableau Stories</span>
-                    </div>
+                    <p class="project-description">Tableau Story analyzing global CO2 emissions and renewable energy adoption impact</p>
+                    <div class="project-meta"><span>Tableau Stories</span><span>Video</span></div>
                 </div>
             </a>
             
-            <!-- Dark Data Halloween -->
-            <a href="Assignment5.html" class="project-card" data-tools="javascript flourish interactive">
-                <img src="assets/thumbnails/dark-data.png" alt="Dark Data Chronicles" class="project-image">
+            <!-- ML Projects -->
+            <a href="https://github.com/Kruthikasv/Predicting-Term-Deposit-Subscription-Using-Direct-Marketing-Campaign-Data" class="project-card" data-category="ml">
+                <img src="assets/thumbnails/term-deposit.png" alt="Term Deposit Prediction" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-javascript">JavaScript</span>
-                        <span class="project-tag tag-flourish">Flourish</span>
+                        <span class="project-tag tag-ml">ML</span>
                     </div>
-                    <h3 class="project-title">Dark Data Chronicles</h3>
-                    <p class="project-description">Scrollytelling investigation of Boston crime patterns and pandemic mobility shifts. Features progress tracking, chapter navigation, and embedded Flourish visualizations.</p>
-                    <div class="project-meta">
-                        <span>Scrollytelling</span>
-                        <span>Data Journalism</span>
-                    </div>
+                    <h3 class="project-title">Term Deposit Subscription Prediction</h3>
+                    <p class="project-description">Ensemble ML models achieving 87.75% F1-score on 45K records with SMOTE for class imbalance</p>
+                    <div class="project-meta"><span>Scikit-learn</span><span>Neural Networks</span></div>
                 </div>
             </a>
             
-            <!-- Skyalytics - Flourish -->
-            <a href="tableau-project-page.html" class="project-card" data-tools="flourish interactive">
-                <img src="assets/thumbnails/skyalytics-overview.png" alt="Skyalytics Dashboard" class="project-image">
+            <a href="https://github.com/Kruthikasv/California_wildfire" class="project-card" data-category="ml">
+                <img src="assets/thumbnails/wildfire.png" alt="Wildfire Prediction" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-flourish">Flourish</span>
+                        <span class="project-tag tag-ml">ML</span>
                     </div>
-                    <h3 class="project-title">Skyalytics: US Air Traffic Analysis</h3>
-                    <p class="project-description">Interactive dashboard analyzing 13.4M delayed flights and 263K cancellations. Explores airline performance, delay patterns, and cancellation reasons across US carriers.</p>
-                    <div class="project-meta">
-                        <span>Aviation Analytics</span>
-                        <span>Google Sites</span>
-                    </div>
+                    <h3 class="project-title">California Wildfire Risk Prediction</h3>
+                    <p class="project-description">Prediction models using Decision Tree, Random Forest, and KNN on 18 features with PCA</p>
+                    <div class="project-meta"><span>Python</span><span>Pandas</span></div>
                 </div>
             </a>
             
-            <!-- Excel: NHIS Health -->
-            <a href="excel-project-page.html" class="project-card" data-tools="excel">
-                <img src="assets/thumbnails/excel-dashboard-main.png" alt="NHIS Health Dashboard" class="project-image">
+            <a href="https://github.com/Kruthikasv" class="project-card" data-category="ml cv">
+                <img src="assets/thumbnails/eeg.png" alt="EEG Classification" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-excel">Excel</span>
+                        <span class="project-tag tag-ml">ML</span>
+                        <span class="project-tag tag-cv">Deep Learning</span>
+                    </div>
+                    <h3 class="project-title">EEG Epileptic Seizure Detection</h3>
+                    <p class="project-description">CNN-based seizure classification achieving 92% accuracy on EEG recordings</p>
+                    <div class="project-meta"><span>TensorFlow</span><span>Keras</span></div>
+                </div>
+            </a>
+            
+            <!-- NLP Projects -->
+            <a href="https://github.com/Kruthikasv/Toxicity-Detection-in-Online-Comments" class="project-card" data-category="nlp">
+                <img src="assets/thumbnails/toxicity.png" alt="Toxicity Detection" class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag tag-nlp">NLP</span>
+                    </div>
+                    <h3 class="project-title">Toxicity Detection in Comments</h3>
+                    <p class="project-description">Comparative NLP framework achieving 74.4% accuracy on 159K comments using TF-IDF and BERT</p>
+                    <div class="project-meta"><span>BERT</span><span>TF-IDF</span></div>
+                </div>
+            </a>
+            
+            <a href="https://github.com/Kruthikasv" class="project-card" data-category="nlp">
+                <img src="assets/thumbnails/pdf-chatbot.png" alt="PDF Chatbot" class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag tag-nlp">NLP</span>
+                        <span class="project-tag tag-web">Web App</span>
+                    </div>
+                    <h3 class="project-title">AI PDF Document Chatbot</h3>
+                    <p class="project-description">LangChain-powered chatbot processing 1,000+ pages/minute, improving data accessibility by 95%</p>
+                    <div class="project-meta"><span>Flask</span><span>LangChain</span></div>
+                </div>
+            </a>
+            
+            <!-- Data Eng Projects -->
+            <a href="https://github.com/Kruthikasv/Centralized_Healthcare_Information_system" class="project-card" data-category="dataeng">
+                <img src="assets/thumbnails/healthcare-db.png" alt="Healthcare DB" class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag tag-dataeng">Data Eng</span>
+                    </div>
+                    <h3 class="project-title">Centralized Healthcare Info System</h3>
+                    <p class="project-description">DBMS integrating MySQL and MongoDB, reducing data retrieval time by 50%</p>
+                    <div class="project-meta"><span>MySQL</span><span>MongoDB</span></div>
+                </div>
+            </a>
+            
+            <a href="https://github.com/Kruthikasv/Tamper_Proof_Air_Quality_Management_System" class="project-card" data-category="dataeng">
+                <img src="assets/thumbnails/air-quality.png" alt="Air Quality" class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag tag-dataeng">Data Eng</span>
+                        <span class="project-tag tag-ml">ML</span>
+                    </div>
+                    <h3 class="project-title">Tamper-Proof Air Quality System</h3>
+                    <p class="project-description">Blockchain-secured AQI monitoring with 99.56% accuracy Decision Tree classifier</p>
+                    <div class="project-meta"><span>Hyperledger</span><span>Python</span></div>
+                </div>
+            </a>
+            
+            <!-- More Data Viz -->
+            <a href="excel-project-page.html" class="project-card" data-category="dataviz">
+                <img src="assets/thumbnails/excel-dashboard-main.png" alt="NHIS Dashboard" class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag tag-dataviz">Excel</span>
                     </div>
                     <h3 class="project-title">NHIS Health Analytics Dashboard</h3>
-                    <p class="project-description">Multi-tab Excel dashboard exploring diabetes, cancer prevalence, and self-reported health patterns using CDC National Health Interview Survey data (2017-2023).</p>
-                    <div class="project-meta">
-                        <span>Pivot Tables</span>
-                        <span>Slicers</span>
-                    </div>
+                    <p class="project-description">Multi-tab Excel dashboard analyzing diabetes, cancer, and health patterns from CDC survey data</p>
+                    <div class="project-meta"><span>Pivot Tables</span><span>Slicers</span></div>
                 </div>
             </a>
             
-            <!-- Datawrapper -->
-            <a href="datawrapper-simple.html" class="project-card" data-tools="interactive">
-                <img src="assets/thumbnails/datawrapper.png" alt="Datawrapper Charts" class="project-image">
+            <a href="tableau-project-page.html" class="project-card" data-category="dataviz">
+                <img src="assets/thumbnails/skyalytics-overview.png" alt="Skyalytics" class="project-image">
                 <div class="project-content">
                     <div class="project-tags">
-                        <span class="project-tag tag-datawrapper">Datawrapper</span>
+                        <span class="project-tag tag-dataviz">Flourish</span>
                     </div>
-                    <h3 class="project-title">Datawrapper Visualizations</h3>
-                    <p class="project-description">Collection of embedded Datawrapper charts analyzing paid vs unpaid work distribution and wealth distribution across countries.</p>
-                    <div class="project-meta">
-                        <span>Embedded Charts</span>
-                        <span>Responsive</span>
-                    </div>
+                    <h3 class="project-title">Skyalytics: US Air Traffic</h3>
+                    <p class="project-description">Dashboard analyzing 13.4M delayed flights and 263K cancellations across US carriers</p>
+                    <div class="project-meta"><span>Flourish</span><span>Google Sites</span></div>
                 </div>
             </a>
             
         </div>
     </section>
     
+    <!-- Skills -->
+    <section id="skills">
+        <div class="section-header">
+            <div class="section-label">Skills</div>
+            <h2 class="section-title">Technical Expertise</h2>
+        </div>
+        
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3><span class="skill-icon">ML</span> Machine Learning</h3>
+                <div class="skill-list">
+                    <span class="skill-item">Scikit-learn</span>
+                    <span class="skill-item">TensorFlow</span>
+                    <span class="skill-item">YOLO</span>
+                    <span class="skill-item">Neural Networks</span>
+                    <span class="skill-item">Feature Engineering</span>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <h3><span class="skill-icon">DE</span> Data Engineering</h3>
+                <div class="skill-list">
+                    <span class="skill-item">Python ETL</span>
+                    <span class="skill-item">SQL/MySQL</span>
+                    <span class="skill-item">REST APIs</span>
+                    <span class="skill-item">Data Modeling</span>
+                    <span class="skill-item">Log Parsing</span>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <h3><span class="skill-icon">VIZ</span> Visualization</h3>
+                <div class="skill-list">
+                    <span class="skill-item">Power BI</span>
+                    <span class="skill-item">Tableau</span>
+                    <span class="skill-item">Plotly/Dash</span>
+                    <span class="skill-item">Flask</span>
+                    <span class="skill-item">Flourish</span>
+                </div>
+            </div>
+            
+            <div class="skill-card">
+                <h3><span class="skill-icon">OPS</span> Platforms & Tools</h3>
+                <div class="skill-list">
+                    <span class="skill-item">GCP</span>
+                    <span class="skill-item">Azure DevOps</span>
+                    <span class="skill-item">Git/GitHub</span>
+                    <span class="skill-item">Firebase</span>
+                    <span class="skill-item">Jupyter</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
     <footer class="footer">
-        <p>Built by Kruthika Vasisht | <a href="https://github.com/kruthikavasisht/data-viz-portfolio">View Source</a></p>
+        <p>Built by Kruthika Vasisht | <a href="https://github.com/Kruthikasv/Portfolio">View Source</a></p>
     </footer>
     
     <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Project filter
         const filterBtns = document.querySelectorAll('.filter-btn');
         const projectCards = document.querySelectorAll('.project-card');
         
@@ -423,20 +1041,15 @@
                 const filter = btn.dataset.filter;
                 
                 projectCards.forEach(card => {
-                    const tools = card.dataset.tools || '';
-                    if (filter === 'all' || tools.includes(filter)) {
+                    const category = card.dataset.category || '';
+                    if (filter === 'all' || category.includes(filter)) {
                         card.style.display = 'block';
-                        card.style.animation = 'fadeIn 0.3s ease';
                     } else {
                         card.style.display = 'none';
                     }
                 });
             });
         });
-        
-        const style = document.createElement('style');
-        style.textContent = `@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
