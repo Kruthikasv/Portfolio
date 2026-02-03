@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Data: A Halloween Investigation</title>
+    
+    <meta name="description" content="A spooky dive into Boston crime patterns and pandemic mobility shifts">
+    <meta name="author" content="Kruthika">
+    
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-orange: #ff6b1a;
+            --accent-purple: #8b3a8b;
+            --accent-blood: #8b0000;
+            --accent-teal: #008080;
+            --border-color: #333;
+            --shadow: 0 4px 20px rgba(255, 107, 26, 0.3);
+            --glow: 0 0 20px rgba(255, 107, 26, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--primary-bg);
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(139, 58, 139, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 26, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-blood));
+            z-index: 9999;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px var(--accent-orange);
+        }
+        
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--accent-orange);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(255, 107, 26, 0.3);
+        }
+        
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: var(--accent-orange);
+            text-shadow: 0 0 10px var(--accent-orange);
+        }
+        
+        .nav-logo::before {
+            content: '🎃 ';
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: 2px solid var(--accent-orange);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            color: var(--accent-orange);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: var(--accent-orange);
+            color: var(--primary-bg);
+            box-shadow: var(--glow);
+            transform: scale(1.1);
+        }
+        
+        .chapter-menu {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 900;
+            display: none;
+        }
+        
+        @media (min-width: 1400px) {
+            .chapter-menu {
+                display: block;
+            }
+        }
+        
+        .chapter-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--border-color);
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid var(--accent-orange);
+        }
+        
+        .chapter-dot:hover {
+            background: var(--accent-orange);
+            transform: scale(1.5);
+            box-shadow: var(--glow);
+        }
+        
+        .chapter-dot.active {
+            background: var(--accent-orange);
+            transform: scale(1.3);
+            box-shadow: var(--glow);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 5px var(--accent-orange); }
+            50% { box-shadow: 0 0 20px var(--accent-orange); }
+        }
+        
+        .chapter-dot:hover::after {
+            content: attr(data-chapter);
+            position: absolute;
+            right: 25px;
+            top: -5px;
+            background: var(--secondary-bg);
+            padding: 5px 15px;
+            border-radius: 5px;
+            white-space: nowrap;
+            font-size: 0.85em;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--accent-orange);
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a1a 100%);
+            color: white;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 26, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.15) 0%, transparent 50%);
+            animation: haunting 20s ease infinite;
+        }
+        
+        @keyframes haunting {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, -20px) scale(1.05); }
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            padding: 0 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            color: var(--accent-orange);
+            text-shadow: 0 0 10px var(--accent-orange);
+        }
+        
+        .hero h1 {
+            font-size: 4em;
+            line-height: 1.2;
+            margin-bottom: 30px;
+            color: var(--accent-orange);
+            text-shadow: 0 0 20px rgba(255, 107, 26, 0.8);
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5em;
+            opacity: 0.95;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+        
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-orange);
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--accent-orange);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .article {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .question-section {
+            margin: 100px 0;
+            scroll-margin-top: 80px;
+        }
+        
+        .question-number {
+            font-size: 0.85em;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-shadow: 0 0 5px var(--accent-orange);
+        }
+        
+        .question-number::before {
+            content: '👻 ';
+        }
+        
+        .question-section h2 {
+            font-size: 2.8em;
+            color: var(--accent-orange);
+            margin-bottom: 30px;
+            line-height: 1.3;
+            text-shadow: 0 0 15px rgba(255, 107, 26, 0.5);
+        }
+        
+        .question-intro {
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-style: italic;
+            border-left: 4px solid var(--accent-orange);
+            padding-left: 20px;
+            box-shadow: -5px 0 10px rgba(255, 107, 26, 0.2);
+        }
+        
+        .viz-wrapper {
+            margin: 60px 0;
+            padding: 40px;
+            background: var(--secondary-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--accent-orange);
+        }
+        
+        .insights-box {
+            background: var(--secondary-bg);
+            padding: 35px;
+            border-radius: 12px;
+            margin: 40px 0;
+            border: 2px solid var(--accent-teal);
+            box-shadow: 0 4px 20px rgba(0, 128, 128, 0.2);
+        }
+        
+        .insights-box h3 {
+            color: var(--accent-teal);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 10px var(--accent-teal);
+        }
+        
+        .insights-box h3::before {
+            content: '🔍';
+        }
+        
+        .insights-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .insights-box li {
+            padding: 12px 0 12px 30px;
+            position: relative;
+            font-size: 1.05em;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        .insights-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent-teal);
+            font-weight: bold;
+        }
+        
+        .drawbacks-box {
+            background: var(--secondary-bg);
+            padding: 35px;
+            border-radius: 12px;
+            margin: 40px 0;
+            border: 2px solid var(--accent-blood);
+            box-shadow: 0 4px 20px rgba(139, 0, 0, 0.2);
+        }
+        
+        .drawbacks-box h3 {
+            color: var(--accent-blood);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 10px var(--accent-blood);
+        }
+        
+        .drawbacks-box h3::before {
+            content: '⚠️';
+        }
+        
+        .drawbacks-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .drawbacks-box li {
+            padding: 12px 0 12px 30px;
+            position: relative;
+            font-size: 1.05em;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        .drawbacks-box li::before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: var(--accent-blood);
+            font-weight: bold;
+        }
+        
+        .alternatives-box {
+            background: var(--secondary-bg);
+            padding: 35px;
+            border-radius: 12px;
+            margin: 40px 0;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 4px 20px rgba(139, 58, 139, 0.2);
+        }
+        
+        .alternatives-box h3 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 10px var(--accent-purple);
+        }
+        
+        .alternatives-box h3::before {
+            content: '💡';
+        }
+        
+        .alternatives-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .alternatives-box li {
+            padding: 12px 0 12px 30px;
+            position: relative;
+            font-size: 1.05em;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        .alternatives-box li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-purple);
+            font-weight: bold;
+        }
+        
+        .author-bio {
+            background: var(--secondary-bg);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 60px 0;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            border: 2px solid var(--accent-orange);
+            box-shadow: var(--glow);
+        }
+        
+        .author-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blood));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5em;
+            flex-shrink: 0;
+            box-shadow: var(--glow);
+        }
+        
+        .author-info h3 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent-orange);
+        }
+        
+        .author-info .author-title {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .author-info p {
+            font-size: 0.95em;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            background: var(--secondary-bg);
+            padding: 60px 40px;
+            border-top: 2px solid var(--accent-orange);
+            margin-top: 100px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            color: var(--primary-bg);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .print-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .article {
+                padding: 40px 20px;
+            }
+            
+            .question-section h2 {
+                font-size: 2em;
+            }
+            
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .viz-wrapper {
+                padding: 20px;
+            }
+        }
+        
+        @media print {
+            .nav-container,
+            .chapter-menu,
+            .print-btn,
+            .scroll-indicator,
+            .progress-bar {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <nav class="nav-container" id="mainNav">
+        <div class="nav-content">
+            <div class="nav-logo">DARK DATA INVESTIGATION</div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="window.print()" title="Print">
+                    <i data-feather="printer"></i>
+                </button>
+                <button class="nav-btn" onclick="shareArticle()" title="Share">
+                    <i data-feather="share-2"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="chapter-menu">
+        <div class="chapter-dot active" data-chapter="Home" onclick="scrollToChapter('hero')"></div>
+        <div class="chapter-dot" data-chapter="Q1: Crime Patterns" onclick="scrollToChapter('q1')"></div>
+        <div class="chapter-dot" data-chapter="Q2: Mobility" onclick="scrollToChapter('q2')"></div>
+        <div class="chapter-dot" data-chapter="Q3: Vaccinations" onclick="scrollToChapter('q3')"></div>
+        <div class="chapter-dot" data-chapter="Q4: COVID Cases" onclick="scrollToChapter('q4')"></div>
+    </div>
+    
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-label">☠️ A HALLOWEEN DATA INVESTIGATION ☠️</div>
+            <h1>Dark Data Chronicles</h1>
+            <p class="hero-subtitle">Boston's haunted crime patterns & the pandemic's ghostly impact on American life</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <i data-feather="user"></i>
+                    <span>By Kruthika</span>
+                </div>
+                <div class="hero-meta-item">
+                    <i data-feather="calendar"></i>
+                    <span>October 2025</span>
+                </div>
+                <div class="hero-meta-item">
+                    <i data-feather="clock"></i>
+                    <span>15 min read</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i data-feather="chevron-down" style="width: 30px; height: 30px;"></i>
+        </div>
+    </section>
+    
+    <article class="article">
+        
+        <!-- QUESTION 1 -->
+        <section class="question-section" id="q1">
+            <div class="question-number">Question 1: Boston Crime Districts</div>
+            <h2>The Haunted Districts of Boston</h2>
+            <p class="question-intro">A chilling investigation into crime patterns across Boston's districts from 2015-2022</p>
+            
+            <div class="viz-wrapper">
+                <div class="flourish-embed flourish-chart" data-src="visualisation/25975859"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/25975859/thumbnail" width="100%" alt="chart visualization" /></noscript></div>
+            </div>
+            
+            <div class="insights-box">
+                <h3>Key Insights</h3>
+                <ul>
+                    <li><strong>Overall Crime Trends:</strong> Most districts show a general decline in crime from 2015 to 2022, with the most dramatic reduction occurring during the COVID-19 pandemic (April-May 2020), where crime dropped by 30-50% across all districts.</li>
+                    <li><strong>District-Specific Patterns:</strong> B2 (Roxbury/Mission Hill) consistently shows the highest crime counts (1000-1500 incidents/month), while A15 (Charlestown) has the lowest crime rates (100-200 incidents/month). External district appears only from late 2019 with minimal activity.</li>
+                    <li><strong>Seasonal Variations:</strong> Summer months (June-August) typically show 10-15% higher crime rates across most districts, likely due to increased outdoor activity and longer daylight hours.</li>
+                    <li><strong>COVID-19 Impact:</strong> The pandemic created a sustained reduction in crime that hasn't fully returned to pre-2020 levels, suggesting lasting changes in urban activity patterns.</li>
+                </ul>
+            </div>
+            
+            <div class="alternatives-box">
+                <h3>Alternative Visualization Ideas</h3>
+                <ul>
+                    <li><strong>Stacked Area Chart:</strong> Shows total city crime while revealing district composition over time</li>
+                    <li><strong>Interactive Heatmap:</strong> District vs. Month with color intensity representing crime density</li>
+                    <li><strong>Animated Choropleth Map:</strong> Geographic visualization showing crime hotspots moving over time</li>
+                    <li><strong>Dashboard with Drill-Down:</strong> Overview with ability to explore specific districts and time periods interactively</li>
+                    <li><strong>Small Multiples Bar Chart:</strong> Monthly comparisons with better categorical perception</li>
+                </ul>
+            </div>
+            
+            <div class="drawbacks-box">
+                <h3>Visualization Drawbacks</h3>
+                <ul>
+                    <li><strong>Comparison Difficulty:</strong> Independent Y-axes make cross-district comparisons challenging - can't easily compare absolute crime counts between districts</li>
+                    <li><strong>Information Overload:</strong> 13 small charts can overwhelm viewers and make it difficult to identify overall patterns</li>
+                    <li><strong>Lack of Geographic Context:</strong> No spatial understanding of where districts are located or their relationships to each other</li>
+                    <li><strong>Limited Interactivity:</strong> Static view doesn't allow focusing on specific patterns or filtering by time periods</li>
+                    <li><strong>Missing Context:</strong> No population normalization means high-population districts may appear more dangerous than they actually are</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- QUESTION 2 -->
+        <section class="question-section" id="q2">
+            <div class="question-number">Question 2: US Mobility During Pandemic</div>
+            <h2>When America Stopped Moving</h2>
+            <p class="question-intro">Tracking the ghostly emptiness of streets, parks, and workplaces during COVID-19</p>
+            
+            <div class="viz-wrapper">
+                <div class="flourish-embed flourish-chart" data-src="visualisation/25984621"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/25984621/thumbnail" width="100%" alt="chart visualization" /></noscript></div>
+            </div>
+            
+            <div class="insights-box">
+                <h3>Key Insights</h3>
+                <ul>
+                    <li><strong>Immediate Pandemic Response:</strong> March 13, 2020 (National Emergency) triggered a 40-50% drop in workplace and retail mobility within two weeks</li>
+                    <li><strong>Inverse Relationship:</strong> As workplace mobility decreased by 40%, residential mobility increased by 15-20%, reflecting the massive work-from-home shift</li>
+                    <li><strong>Parks Anomaly:</strong> Parks showed increased usage during good weather despite lockdowns, reaching +80% during summer 2020, indicating outdoor recreation became a critical pandemic outlet</li>
+                    <li><strong>Recovery Patterns Varied:</strong> Grocery/Pharmacy recovered quickest (essential services), Parks exceeded baseline during summers, while Transit/Workplace showed slowest recovery and remained below baseline even in 2022</li>
+                    <li><strong>Holiday Signatures:</strong> Consistent drops during major holidays (Thanksgiving -70%, Christmas -80%) reveal strong seasonal patterns across all years</li>
+                </ul>
+            </div>
+            
+            <div class="alternatives-box">
+                <h3>Alternative Visualization Ideas</h3>
+                <ul>
+                    <li><strong>Calendar Heatmap:</strong> Daily mobility values shown as colored tiles for easy pattern recognition</li>
+                    <li><strong>Radar Chart Animation:</strong> Shows changing mobility profile over time with all categories visible simultaneously</li>
+                    <li><strong>Small Multiples with Shared Y-axis:</strong> Better comparison across categories while maintaining individual trends</li>
+                    <li><strong>Slope Chart:</strong> Comparing key time points (pre-pandemic, peak lockdown, current) for dramatic contrast</li>
+                    <li><strong>Diverging Bar Chart:</strong> Show positive/negative changes from baseline more clearly</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- QUESTION 3 -->
+        <section class="question-section" id="q3">
+            <div class="question-number">Question 3: US Vaccination Map</div>
+            <h2>The Vaccination Spell Spreads</h2>
+            <p class="question-intro">Mapping the life-saving vaccination rollout across America</p>
+            
+            <div class="viz-wrapper">
+                <div class="flourish-embed flourish-map" data-src="visualisation/25985344"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/25985344/thumbnail" width="100%" alt="map visualization" /></noscript></div>
+            </div>
+            
+            <div class="insights-box">
+                <h3>Geographic & Policy Insights</h3>
+                <ul>
+                    <li><strong>Geographic Disparities:</strong> Clear regional patterns with Northeast and West Coast showing higher vaccination rates (70-80%) compared to Southern and Mountain states (50-60%)</li>
+                    <li><strong>Political Correlation:</strong> States with higher vaccination rates generally align with specific political demographics, suggesting policy and cultural factors heavily influence uptake</li>
+                    <li><strong>Population Density Factor:</strong> Urban states tend to have higher vaccination rates than rural states, possibly due to better healthcare access and different risk perceptions</li>
+                </ul>
+                
+                <h3 style="margin-top: 30px;">Color Scheme Analysis: Binned vs Continuous</h3>
+                <ul>
+                    <li><strong>✓ Binned is Better Because:</strong> Vaccination rates have meaningful policy thresholds (50%, 70% for herd immunity), makes it easier to identify states in critical ranges, better for colorblind accessibility, and clearer for policy makers to identify intervention targets</li>
+                    <li><strong>Continuous Would Be Better If:</strong> Showing subtle gradients between similar states, tracking small changes over time, or emphasizing exact percentages rather than categories</li>
+                    <li><strong>Verdict:</strong> The binned color scheme is appropriate for this dataset because policy thresholds matter more than precise percentages</li>
+                </ul>
+            </div>
+            
+            <div class="alternatives-box">
+                <h3>Color Scheme Recommendations</h3>
+                <ul>
+                    <li><strong>Binned (Current):</strong> Better for identifying discrete categories and state-by-state comparison</li>
+                    <li><strong>Continuous Gradient:</strong> Better for showing smooth variations and precise values</li>
+                    <li><strong>Diverging Scale:</strong> Could highlight above/below average vaccination rates</li>
+                    <li><strong>Sequential with More Bins:</strong> Compromise between categorical clarity and gradient detail</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- QUESTION 4 -->
+        <section class="question-section" id="q4">
+            <div class="question-number">Question 4: Global COVID-19 Race</div>
+            <h2>The Pandemic's Deadly Race</h2>
+            <p class="question-intro">Watch as COVID-19 cases surge across the globe in this haunting animation</p>
+            
+            <div class="viz-wrapper">
+                <div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/25985452"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/25985452/thumbnail" width="100%" alt="bar-chart-race visualization" /></noscript></div>
+            </div>
+            
+            <div class="insights-box">
+                <h3>Key Insights</h3>
+                <ul>
+                    <li><strong>Shifting Epicenters:</strong> The pandemic's center moved from China (Jan-Feb 2020) to Europe (March 2020) to the Americas (April 2020 onward), showing clear global transmission patterns</li>
+                    <li><strong>US Dominance:</strong> The US maintained the #1 position from April 2020 through 2022, representing about 20% of global cases despite having only 4% of world population</li>
+                    <li><strong>India's Delta Surge:</strong> India's dramatic climb during the Delta wave (April-May 2021) shows how new variants can rapidly change global rankings</li>
+                    <li><strong>Exponential Growth Patterns:</strong> Countries showed similar S-curve growth patterns but offset by weeks/months, indicating predictable spread dynamics</li>
+                    <li><strong>Persistence of Rankings:</strong> After initial volatility, top 5 countries (US, India, Brazil, France, Germany) remained relatively stable, suggesting systemic factors beyond initial response</li>
+                    <li><strong>Testing Correlation:</strong> Countries with higher testing capacity showed higher case counts, while China's early exit from top 10 despite large population suggests reporting inconsistencies</li>
+                </ul>
+            </div>
+            
+            <div class="alternatives-box">
+                <h3>Alternative Visualization Ideas</h3>
+                <ul>
+                    <li><strong>Choropleth Map Animation:</strong> Show geographic spread with time slider</li>
+                    <li><strong>Line Chart with Highlighting:</strong> Track all countries with interactive selection</li>
+                    <li><strong>Bump Chart:</strong> Show ranking changes over time more clearly than bar race</li>
+                    <li><strong>Small Multiples Line Charts:</strong> Compare top 10 countries side-by-side</li>
+                    <li><strong>Slope Chart:</strong> Compare beginning vs end rankings dramatically</li>
+                </ul>
+            </div>
+            
+            <div class="drawbacks-box">
+                <h3>Bar Chart Race Drawbacks</h3>
+                <ul>
+                    <li><strong>Analysis vs Entertainment:</strong> Great for engagement and storytelling but poor for detailed quantitative analysis</li>
+                    <li><strong>Lost Data:</strong> Countries dropping out of top 10 disappear from view entirely, hiding important pandemic stories</li>
+                    <li><strong>Speed Issues:</strong> Animation speed makes it hard to read exact values or pause at critical moments</li>
+                    <li><strong>No Cumulative Context:</strong> Difficult to see overall pandemic progression or total global burden</li>
+                    <li><strong>Missing Per-Capita:</strong> Absolute counts don't account for population differences - smaller countries with high per-capita rates are invisible</li>
+                    <li><strong>Wave Patterns Hidden:</strong> Multiple surges visible as acceleration periods but hard to analyze systematically</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Author Bio -->
+        <section class="author-bio">
+            <div class="author-avatar">K</div>
+            <div class="author-info">
+                <h3>Kruthika</h3>
+                <p class="author-title">Data Necromancer, SpectraWAVE, Inc.</p>
+                <p>Kruthika specializes in bringing dark datasets to light, building end-to-end analytics platforms for complex systems. From crime patterns to pandemic impacts, she transforms haunting numbers into actionable insights.</p>
+            </div>
+        </section>
+    </article>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <p>🎃 © 2025 Dark Data Chronicles. All souls reserved. 🎃</p>
+            <p>Created by Kruthika | October 2025 | Happy Halloween!</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">Data Sources: Boston Police Department, Google Mobility Reports, CDC COVID-19 Data</p>
+        </div>
+    </footer>
+    
+    <button class="print-btn" onclick="window.print()">
+        <i data-feather="download" style="width: 24px; height: 24px;"></i>
+    </button>
+    
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <script>
+        function updateProgress() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        }
+        
+        window.addEventListener('scroll', updateProgress);
+        
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const nav = document.getElementById('mainNav');
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                nav.classList.add('hidden');
+            } else {
+                nav.classList.remove('hidden');
+            }
+            lastScroll = currentScroll;
+        });
+        
+        function updateActiveChapter() {
+            const sections = document.querySelectorAll('.question-section');
+            const dots = document.querySelectorAll('.chapter-dot');
+            
+            let activeIndex = 0;
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight / 2) {
+                    activeIndex = index + 1;
+                }
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveChapter);
+        
+        function scrollToChapter(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dark Data Chronicles',
+                    text: 'Boston crime patterns & pandemic impact investigation',
+                    url: window.location.href
+                });
+            } else {
+                alert('Share this investigation: ' + window.location.href);
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+            updateProgress();
+            updateActiveChapter();
+        });
+    </script>
+</body>
+</html>

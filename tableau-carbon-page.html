@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renewable Energy & Carbon Emissions Analysis | Kruthika Vasisht</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafb;
+            color: #1e293b;
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        
+        .breadcrumb a { color: #16a34a; text-decoration: none; }
+        
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #475569;
+            margin-bottom: 32px;
+            max-width: 750px;
+        }
+        
+        .meta-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+        
+        .tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .tag.tool {
+            background: #e97627;
+            color: white;
+            border: none;
+        }
+        
+        .tag.topic {
+            background: #16a34a;
+            color: white;
+            border: none;
+        }
+        
+        .section { margin-bottom: 56px; }
+        
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        p { color: #475569; margin-bottom: 16px; }
+        
+        /* Video Container */
+        .video-container {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 32px;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-caption {
+            padding: 16px 24px;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .video-duration {
+            background: #334155;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        /* Story Tabs */
+        .story-tabs {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+        
+        .story-tabs h4 {
+            font-size: 14px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        .tabs-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tab-item {
+            background: #f1f5f9;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .tab-item.highlight {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+        
+        /* Insights Box */
+        .insights-box {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            color: white;
+        }
+        
+        .insights-box h3 { font-size: 18px; margin-bottom: 20px; }
+        .insights-box ul { list-style: none; padding: 0; }
+        
+        .insights-box li {
+            padding: 12px 0;
+            padding-left: 24px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        
+        .insights-box li:last-child { border-bottom: none; }
+        
+        .insights-box li::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: #86efac;
+            font-weight: bold;
+        }
+        
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #dcfce7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #16a34a;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .feature-text { font-size: 14px; color: #1e293b; font-weight: 500; }
+        
+        /* Team */
+        .team-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .team-section h4 {
+            font-size: 14px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        .team-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .team-member {
+            background: #f1f5f9;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e293b;
+        }
+        
+        /* Tech Stack */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 24px 0;
+        }
+        
+        .tech-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e293b;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 28px; }
+            .container { padding: 40px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Portfolio</a> / Tableau / Carbon Emissions Analysis
+        </div>
+        
+        <h1>Impact of Renewable Energy Adoption on Global Carbon Emissions</h1>
+        <p class="subtitle">Tableau Story analyzing worldwide CO2 emissions, carbon footprint patterns, and the relationship between renewable energy adoption and emission reduction</p>
+        
+        <div class="meta-tags">
+            <span class="tag tool">Tableau</span>
+            <span class="tag topic">Sustainability</span>
+            <span class="tag">Environmental Analytics</span>
+            <span class="tag">Global Data</span>
+            <span class="tag">Group Project</span>
+        </div>
+        
+        <!-- YouTube Video Embed -->
+        <div class="section">
+            <h2>Dashboard Walkthrough</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <iframe 
+                        src="https://www.youtube.com/embed/v2KfZ1MLh5E" 
+                        title="Renewable Energy & Carbon Emissions Tableau Dashboard"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-caption">
+                    <span>Full presentation walkthrough demonstrating dashboard interactivity and key insights</span>
+                    <span class="video-duration">5:42</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tableau Story Structure -->
+        <div class="section">
+            <h2>Tableau Story Structure</h2>
+            <div class="story-tabs">
+                <h4>Story Chapters</h4>
+                <div class="tabs-list">
+                    <span class="tab-item">Introduction</span>
+                    <span class="tab-item">Overview</span>
+                    <span class="tab-item highlight">CO2 Worldwide</span>
+                    <span class="tab-item highlight">CO2 Categories</span>
+                    <span class="tab-item highlight">CO2 Footprint</span>
+                    <span class="tab-item">Resources</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Project Overview</h2>
+            <p>This Tableau Story investigates the global impact of renewable energy adoption on carbon dioxide emissions. The analysis spans multiple dimensions including geographic distribution of emissions, categorical breakdowns by sector, and individual carbon footprint patterns.</p>
+            <p>The project aims to visualize the relationship between countries' renewable energy investments and their corresponding emission trajectories, providing data-driven insights for environmental policy discussions.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Key Analysis Areas</h2>
+            <div class="insights-box">
+                <h3>What the Dashboard Explores</h3>
+                <ul>
+                    <li><strong>CO2 Worldwide:</strong> Geographic visualization of carbon emissions across countries and regions</li>
+                    <li><strong>CO2 Categories:</strong> Breakdown of emissions by sector (transportation, industry, energy, agriculture)</li>
+                    <li><strong>CO2 Footprint:</strong> Individual and per-capita carbon footprint analysis across demographics</li>
+                    <li><strong>Renewable Impact:</strong> Correlation between renewable energy adoption rates and emission changes</li>
+                    <li><strong>Trend Analysis:</strong> Historical patterns and projections for global emissions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Dashboard Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">S</div>
+                    <div class="feature-text">Tableau Story Format</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">M</div>
+                    <div class="feature-text">Global Map Visualizations</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">T</div>
+                    <div class="feature-text">Time Series Trends</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">C</div>
+                    <div class="feature-text">Category Comparisons</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">F</div>
+                    <div class="feature-text">Interactive Filters</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">N</div>
+                    <div class="feature-text">Narrative Flow</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Technical Details</h2>
+            <div class="tech-grid">
+                <div class="tech-item">Tableau Desktop</div>
+                <div class="tech-item">Tableau Stories</div>
+                <div class="tech-item">Geographic Maps</div>
+                <div class="tech-item">Calculated Fields</div>
+                <div class="tech-item">Parameters</div>
+                <div class="tech-item">Dashboard Actions</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Team</h2>
+            <div class="team-section">
+                <h4>Project Contributors</h4>
+                <div class="team-list">
+                    <span class="team-member">Kruthika Srinivas Vasisht</span>
+                    <span class="team-member">Janani Karthikeyan</span>
+                    <span class="team-member">Sneha C M</span>
+                </div>
+            </div>
+            <p>Developed as part of IE6600 Computation and Visualization for Analytics at Northeastern University.</p>
+        </div>
+    </div>
+</body>
+</html>
